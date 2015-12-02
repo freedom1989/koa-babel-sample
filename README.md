@@ -1,11 +1,11 @@
 # koa-babel-sample
 
-* Setup development
-** clone reqpository
+## Setup development
+### clone reqpository
 ```
 git clone https://github.com/freedom1989/koa-babel-sample.git
 ```
-** generate self-signed SSL Certificate
+### generate self-signed SSL Certificate
 ```
 cd koa-babel-sample
 mkdir keys
@@ -16,7 +16,7 @@ cp server.key server.key.org
 openssl rsa -in server.key.org -out server.key
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ```
-** run the project
+### run the project
 ```
 bin/server.js
 ```
