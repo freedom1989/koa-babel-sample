@@ -1,8 +1,8 @@
-import Router from "koa-router";
-import userAPI from "./userAPI";
+import Router from 'koa-router';
+import userAPI from './userAPI';
 
 let router = Router({
-    prefix: "/api"
+    prefix: '/api'
 });
 
 router.use(userAPI.routes());
