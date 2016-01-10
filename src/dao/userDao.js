@@ -6,7 +6,7 @@ export default async function getUsers() {
 function getlist() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve(100);
+            resolve(12345);
         }, 1000);
     });
 }

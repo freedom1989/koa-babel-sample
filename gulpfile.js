@@ -1,12 +1,12 @@
 const gulp = require('gulp');
 const babel = require('gulp-babel');
-const concat = require('gulp-concat');
 const sourcemaps = require('gulp-sourcemaps');
 const cache = require('gulp-cached');
-const remember = require('gulp-remember');
 const nodemon = require('gulp-nodemon');
 const nodeInspector = require('gulp-node-inspector');
 const exec = require('child_process').exec;
+const count = require('gulp-count');
+const clean = require('gulp-clean');
 
 gulp.task('build-scripts', () => {
     return gulp.src('src/**/*.js')
@@ -17,7 +17,7 @@ gulp.task('build-scripts', () => {
             plugins: ['transform-runtime']
         }))
         .pipe(sourcemaps.write())
-        .pipe(remember('scripts'))
+        .pipe(count('## files compiled', {logFiles: true}))
         .pipe(gulp.dest('dist'));
 });
 
@@ -26,7 +26,7 @@ gulp.task('watch-scripts', () => {
     watcher.on('change', function (event) {
         if (event.type === 'deleted') { // if a file is deleted, forget about it 
             delete cache.caches['scripts'][event.path];
-            remember.forget('scripts', event.path);
+            // remember.forget('scripts', event.path);
         }
     });
 });
@@ -37,8 +37,6 @@ gulp.task('inspect', function () {
     }));
 });
 
-
-
 gulp.task('dev', ['build-scripts', 'watch-scripts', 'inspect'], () => {
     nodemon({
         script: "dist/server.js",
@@ -47,4 +45,9 @@ gulp.task('dev', ['build-scripts', 'watch-scripts', 'inspect'], () => {
         debug: true,
         nodeArgs: ['--debug']
     });
+});
+
+gulp.task('clean', () => {
+    return gulp.src('dist', {read: false})
+            .pipe(clean());
 });
