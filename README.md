@@ -16,7 +16,7 @@ cp server.key server.key.org
 openssl rsa -in server.key.org -out server.key
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ```
-### run the project
+### start development
 ```
-bin/server.js
+gulp dev
 ```
