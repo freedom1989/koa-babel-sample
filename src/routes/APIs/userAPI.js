@@ -6,7 +6,6 @@ let router = Router({
 });
 
 router.get('/', function *(next) {
-    console.log('in');
     let abc = yield getUsers();
     this.body = abc;
 });
