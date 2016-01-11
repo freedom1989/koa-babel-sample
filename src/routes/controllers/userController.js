@@ -4,7 +4,7 @@ let router = Router({
     prefix: '/users'
 });
 
-router.get('/', function *(next) {
+router.get('/', function *() {
     this.body = 'get user page';
 });
 

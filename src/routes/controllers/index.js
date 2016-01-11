@@ -3,7 +3,7 @@ import userController from './userController';
 
 let router = Router();
 
-router.get('/', function *(next) {
+router.get('/', function *() {
     yield this.render('index', {title: 'hello world!!!!'});
 });
 

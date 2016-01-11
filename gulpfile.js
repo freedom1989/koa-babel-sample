@@ -7,6 +7,8 @@ const nodeInspector = require('gulp-node-inspector');
 const exec = require('child_process').exec;
 const count = require('gulp-count');
 const clean = require('gulp-clean');
+const eslint = require('gulp-eslint');
+const runSequence = require('run-sequence');
 
 gulp.task('build-scripts', () => {
     return gulp.src('src/**/*.js')
@@ -17,27 +19,38 @@ gulp.task('build-scripts', () => {
             plugins: ['transform-runtime']
         }))
         .pipe(sourcemaps.write())
-        .pipe(count('## files compiled', {logFiles: true}))
+        .pipe(count('## files compiled'))
         .pipe(gulp.dest('dest'));
 });
 
 gulp.task('build-static', () => {
     return gulp.src('src/static/**')
         .pipe(cache('static'))
-        .pipe(count('## static files copied', {logFiles: true}))
+        .pipe(count('## static files copied'))
         .pipe(gulp.dest('dest/static'));
 });
 
 gulp.task('build-tmpl', () => {
     return gulp.src('src/views/**')
         .pipe(cache('tmpl'))
-        .pipe(count('## template files copied', {logFiles: true}))
+        .pipe(count('## template files copied'))
         .pipe(gulp.dest('dest/views'));
+});
+
+gulp.task('lint', () => {
+    return gulp.src('src/**/*.js')
+        .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failAfterError last.
+        .pipe(eslint.failAfterError());
 });
 
 gulp.task('watch', () => {
     // watch javascript
-    gulp.watch('src/**/*.js', ['build-scripts']).on('change', function (event) {
+    gulp.watch('src/**/*.js', ['lint', 'build-scripts']).on('change', function (event) {
         if (event.type === 'deleted') {
             delete cache.caches['scripts'][event.path];
             // remember.forget('scripts', event.path);
@@ -62,9 +75,15 @@ gulp.task('inspect', function () {
     }));
 });
 
-gulp.task('build', ['build-tmpl', 'build-static', 'build-scripts']);
+gulp.task('build-src', ['build-tmpl', 'build-static', 'build-scripts']);
 
-gulp.task('dev', ['build', 'watch', 'inspect'], () => {
+gulp.task('build', () => {
+    runSequence('clean', 'lint', 'build-src', function() {
+    });
+});
+
+
+gulp.task('dev', ['lint', 'build-src', 'watch', 'inspect'], () => {
     nodemon({
         script: "dest/app.js",
         watch: "dest",
@@ -73,6 +92,8 @@ gulp.task('dev', ['build', 'watch', 'inspect'], () => {
         nodeArgs: ['--debug']
     });
 });
+
+gulp.task('default', ['dev']);
 
 gulp.task('clean', () => {
     return gulp.src('dest', {read: false})

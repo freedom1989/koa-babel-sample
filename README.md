@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/freedom1989/koa-babel-sample.git
 ```
-### generate self-signed SSL Certificate
+### ~~generate self-signed SSL Certificate~~
 ```
 cd koa-babel-sample
 mkdir keys
@@ -19,4 +19,8 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ### start development
 ```
 gulp dev
+```
+or
+```
+gulp
 ```
