@@ -9,7 +9,11 @@
         "node": true
     },
     "ecmaFeatures": { 
-        "modules": true
+        "modules": true,
+        "arrowFunctions": true,
+        "classes": true,
+        "forOf": true,
+        "generators": true
     },
     "rules": {
         "indent": [ 2, 4 ],
@@ -17,6 +21,11 @@
         "linebreak-style": [ 2, "unix" ],
         "semi": [ 2, "always" ],
         "eqeqeq": 2,
+        "arrow-spacing": 2,
+        "arrow-parens": 2,
+        "arrow-body-style": 2, 
+        "constructor-super": 2,
+        "no-var": 2,
         "no-console": 1
     }
     

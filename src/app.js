@@ -6,10 +6,10 @@ import hbs from 'koa-hbs';
 import serve from 'koa-static';
 import bodyParser from 'koa-bodyparser';
 
-var app = koa();
+const app = koa();
 
 app.use(function *(next) {
-    var xhr = this.header['x-requested-with'];
+    const xhr = this.header['x-requested-with'];
     if(xhr && xhr.toLowerCase() === 'xmlhttprequest') {
         this.isAjax = true;
     } else {
