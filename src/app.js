@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
+import config from './framework/loadConfig'; // keep loadConfig module first
 import koa from 'koa';
 import router from './routes/index';
 import hbs from 'koa-hbs';
 import serve from 'koa-static';
 import bodyParser from 'koa-bodyparser';
+import logger from './framework/logger';
 
 const app = koa();
 
@@ -67,10 +69,13 @@ app.use(router.routes());
 
 app.on('error', function(err){
     if (process.env.NODE_ENV !== 'test') {
-        console.log('[ERROR] %s', err);
+        logger.error('unhandled error %s', err, {
+            stack: err.stack
+        });
     }
 });
 
-app.listen(8000);
-console.log('koa is listening on 8000');
+app.listen(config.port);
+logger.info('koa is listening on ' + config.port);
+logger.info('Date now %s', new Date());
 

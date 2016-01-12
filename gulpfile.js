@@ -37,6 +37,13 @@ gulp.task('build-tmpl', () => {
         .pipe(gulp.dest('dest/views'));
 });
 
+gulp.task('build-conf', () => {
+    return gulp.src('src/conf/**')
+        .pipe(cache('config'))
+        .pipe(count('## config file copied'))
+        .pipe(gulp.dest('dest/conf'));
+});
+
 gulp.task('lint', () => {
     return gulp.src('src/**/*.js')
         .pipe(eslint())
@@ -67,6 +74,12 @@ gulp.task('watch', () => {
             delete cache.caches['tmpl'][event.path];
         }
     });
+
+    gulp.watch('src/conf/**', ['build-conf']).on('change', function (event) {
+        if (event.type === 'deleted') {
+            delete cache.caches['conf'][event.path];
+        }
+    });
 });
 
 gulp.task('inspect', function () {
@@ -83,7 +96,7 @@ gulp.task('build', () => {
 });
 
 
-gulp.task('dev', ['lint', 'build-src', 'watch', 'inspect'], () => {
+gulp.task('dev', ['lint', 'build-conf', 'build-src', 'watch', 'inspect'], () => {
     nodemon({
         script: "dest/app.js",
         watch: "dest",
