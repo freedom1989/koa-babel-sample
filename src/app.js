@@ -10,9 +10,9 @@ import logger from './framework/logger';
 
 const app = koa();
 
-app.use(function *(next) {
+app.use(function*(next) {
     const xhr = this.header['x-requested-with'];
-    if(xhr && xhr.toLowerCase() === 'xmlhttprequest') {
+    if (xhr && xhr.toLowerCase() === 'xmlhttprequest') {
         this.isAjax = true;
     } else {
         this.isAjax = false;
@@ -20,13 +20,13 @@ app.use(function *(next) {
     yield next;
 });
 
-app.use(function *(next){
+app.use(function*(next) {
     try {
         yield next;
     } catch (err) {
         this.status = err.status || 500;
-        if(this.isAjax) {
-            if(err.custom) {
+        if (this.isAjax) {
+            if (err.custom) {
                 this.body = err;
             } else {
                 this.body = {
@@ -34,7 +34,7 @@ app.use(function *(next){
                 };
             }
         } else {
-            if(err.custom) {
+            if (err.custom) {
                 yield this.render(err.view, err);
             } else {
                 yield this.render('error/500');
@@ -44,12 +44,12 @@ app.use(function *(next){
     }
 });
 
-app.use(function *(next){
+app.use(function*(next) {
     yield next;
     if (this.body || !this.idempotent) return;
     this.status = 404;
-    if(this.isAjax) {
-        this.body = { 
+    if (this.isAjax) {
+        this.body = {
             message: 'Server Internal Error'
         };
     } else {
@@ -60,14 +60,15 @@ app.use(function *(next){
 app.use(serve(__dirname + '/static'));
 
 app.use(hbs.middleware({
-    viewPath: __dirname + '/views'
+    viewPath: __dirname + '/views',
+    disableCache: process.env.NODE_ENV === 'development'
 }));
 
 app.use(bodyParser());
 
 app.use(router.routes());
 
-app.on('error', function(err){
+app.on('error', function(err) {
     if (process.env.NODE_ENV !== 'test') {
         logger.error('unhandled error %s', err, {
             stack: err.stack
@@ -78,4 +79,3 @@ app.on('error', function(err){
 app.listen(config.port);
 logger.info('koa is listening on ' + config.port);
 logger.info('Date now %s', new Date());
-

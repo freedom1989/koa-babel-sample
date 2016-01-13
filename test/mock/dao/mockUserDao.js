@@ -1,14 +1,5 @@
 
-let users = [
-    {
-        name: 'lilintao',
-        password: 'passwd1'
-    },
-    {
-        name: 'freedom',
-        password: 'passwd2345'
-    }
-];
+let users = [];
 
 function getUserList() {
     return new Promise((resolve) => {
@@ -62,7 +53,13 @@ function getUserByName(name) {
     });
 }
 
+function _reset() {
+    users = [];
+}
+
+
 const UserDao = {
+    _reset,
     getUserList,
     addUser,
     updateUser,

@@ -2,7 +2,7 @@ import winston from 'winston';
 import path from 'path';
 import fs from 'fs';
 
-let logDir = path.join(__dirname, '../logs');
+let logDir = path.join(__dirname, '../../logs');
 
 try {
     fs.mkdirSync(logDir);

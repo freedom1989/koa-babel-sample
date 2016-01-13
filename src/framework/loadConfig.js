@@ -2,8 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import winston from 'winston';
 
-const DEFAULT_CONFIG_FILE = path.join(__dirname, '../conf/config.prod.json');
-const DEFAULT_CONFIG_FILE_FOR_DEV = path.join(__dirname, '../conf/config.dev.json');
+const DEFAULT_CONFIG_FILE = path.join(__dirname, '..', '../conf/config.prod.json');
+const DEFAULT_CONFIG_FILE_FOR_DEV = path.join(__dirname, '..', '../conf/config.dev.json');
 
 const config = (function _getConfig() {
     let configFile = DEFAULT_CONFIG_FILE;
