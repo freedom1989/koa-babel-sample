@@ -17,7 +17,7 @@ help(gulp);
 
 gulp.task('default', ['help']);
 
-gulp.task('dev', 'start development', ['lint', 'build', 'inspect'], () => {
+gulp.task('dev', 'start development', ['build', 'inspect'], () => {
     nodemon({
         script: "dest/src/app.js",
         watch: "dest/",
@@ -45,6 +45,8 @@ gulp.task('dev', 'start development', ['lint', 'build', 'inspect'], () => {
             }
         }
     });
+
+    lint();
 });
 
 gulp.task('release', 'run this task before release. this will kick eslint check, build, and test', ['lint', 'build-without-test'], () => {
@@ -58,8 +60,7 @@ gulp.task('clean', 'remove dest folder', () => {
         .pipe(clean());
 });
 
-
-gulp.task('lint', 'kick eslint check', () => {
+function lint() {
     return gulp.src(['src/**/*.js', 'test/**/*.js'])
         .pipe(eslint())
         // eslint.format() outputs the lint results to the console.
@@ -68,7 +69,8 @@ gulp.task('lint', 'kick eslint check', () => {
         // To have the process exit with an error code (1) on
         // lint error, return the stream and pipe to failAfterError last.
         .pipe(eslint.failAfterError());
-});
+}
+gulp.task('lint', 'kick eslint check', lint);
 
 gulp.task('test', 'run test code. NOTE: run this after build.', () => {
     return gulp.src('dest/test/**/*.js', {

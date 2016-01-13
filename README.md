@@ -20,7 +20,4 @@ openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 ```
 gulp dev
 ```
-or
-```
-gulp
-```
+run `gulp help` to find more command.
