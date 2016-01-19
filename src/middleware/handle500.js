@@ -2,20 +2,25 @@ const handle500 = function *(next) {
     try {
         yield next;
     } catch (err) {
-        this.status = err.status || 500;
         if (this.isAjax) {
             if (err.custom) {
-                this.body = err;
+                this.status = err.status || 500;
+                this.body = {
+                    message: err.message
+                };
             } else {
+                this.status = 500;
                 this.body = {
                     message: 'Server Internal Error'
                 };
             }
         } else {
             if (err.custom) {
-                yield this.render(err.view, err);
+                this.status = err.status || 500;
+                yield this.render(err.view || 'error/err', { message: err.message });
             } else {
-                yield this.render('error/500');
+                this.status = 500;
+                yield this.render('error/err', err);
             }
         }
         this.app.emit('error', err, this);

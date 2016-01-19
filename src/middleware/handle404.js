@@ -4,7 +4,7 @@ const handle404 = function *(next) {
     this.status = 404;
     if (this.isAjax) {
         this.body = {
-            message: 'Server Internal Error'
+            message: 'You are lost'
         };
     } else {
         yield this.render('error/404');

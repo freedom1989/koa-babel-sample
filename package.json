@@ -9,6 +9,7 @@
   "author": "LI Lintao",
   "license": "ISC",
   "dependencies": {
+    "http-assert": "^1.1.1",
     "koa": "^1.1.2",
     "koa-bodyparser": "^2.0.1",
     "koa-hbs": "^0.7.0",
