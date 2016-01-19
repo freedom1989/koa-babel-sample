@@ -12,6 +12,7 @@ const runSequence = require('run-sequence');
 const mocha = require('gulp-mocha');
 const help = require('gulp-help');
 const path = require('path');
+const gulpUtil = require('gulp-util');
 
 help(gulp);
 
@@ -94,13 +95,19 @@ gulp.task('test-debug', 'run test code in debug mode, you can use node-inspector
 });
 
 gulp.task('build-src', 'build and copy the server-side source code to dest folder', () => {
+    var transpiler = babel({
+        presets: ['es2015', 'stage-0'],
+        plugins: ['transform-runtime']
+    });
+    transpiler.on('error', (e) => {
+        gulpUtil.log(e.message);
+        gulpUtil.log(e.stack);
+        transpiler.end();
+    });
     return gulp.src(['src/**', '!src/static/**', '!src/views/**', '!src/conf/**'])
         .pipe(cache('src'))
         .pipe(sourcemaps.init())
-        .pipe(babel({
-            presets: ['es2015', 'stage-0'],
-            plugins: ['transform-runtime']
-        }))
+        .pipe(transpiler)
         .pipe(sourcemaps.write())
         .pipe(count('## files compiled'))
         .pipe(gulp.dest('dest/src'));
@@ -146,5 +153,6 @@ gulp.task('inspect', 'start node-inspector', function() {
     }));
 });
 
-gulp.task('build-without-test', 'build everything but test code into dest folder', ['build-tmpl', 'build-static', 'build-src', 'build-conf'])
+gulp.task('build-without-test', 'build everything but test code into dest folder', 
+        ['build-tmpl', 'build-static', 'build-src', 'build-conf'])
 gulp.task('build', 'build every thing into dest folder', ['build-without-test', 'build-test']);
