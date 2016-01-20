@@ -8,14 +8,19 @@ import serve from 'koa-static';
 import bodyParser from 'koa-bodyparser';
 import logger from './framework/logger';
 import ajaxDetector from './middleware/ajaxDetector';
-import handle500 from './middleware/handle500';
+import handleErrors from './middleware/handleErrors';
 import handle404 from './middleware/handle404';
+import session from 'koa-session';
+import compress from 'koa-compress';
 
 const app = koa();
 
+app.use(compress());
+app.use(session(app));
+
 app.use(ajaxDetector);
 
-app.use(handle500);
+app.use(handleErrors);
 
 app.use(handle404);
 
